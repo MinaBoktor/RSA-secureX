@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\RexoL\\source\\repos\\temp\\ConsoleApp1\\ConsoleApp1.csproj": {}
+    "C:\\Users\\RexoL\\source\\repos\\RSA-secureX\\securex.csproj": {}
   },
   "projects": {
-    "C:\\Users\\RexoL\\source\\repos\\temp\\ConsoleApp1\\ConsoleApp1.csproj": {
+    "C:\\Users\\RexoL\\source\\repos\\RSA-secureX\\securex.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\RexoL\\source\\repos\\temp\\ConsoleApp1\\ConsoleApp1.csproj",
-        "projectName": "ConsoleApp1",
-        "projectPath": "C:\\Users\\RexoL\\source\\repos\\temp\\ConsoleApp1\\ConsoleApp1.csproj",
+        "projectUniqueName": "C:\\Users\\RexoL\\source\\repos\\RSA-secureX\\securex.csproj",
+        "projectName": "securex",
+        "projectPath": "C:\\Users\\RexoL\\source\\repos\\RSA-secureX\\securex.csproj",
         "packagesPath": "C:\\Users\\RexoL\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\RexoL\\source\\repos\\temp\\ConsoleApp1\\obj\\",
+        "outputPath": "C:\\Users\\RexoL\\source\\repos\\RSA-secureX\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\RexoL\\AppData\\Roaming\\NuGet\\NuGet.Config",

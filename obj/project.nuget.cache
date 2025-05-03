@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ZNX5agRC2Z4X+oQRTtg1ZLYRsPgLROwVz11+DWkUpzlwLODp1pRILmpP+1Btqy7uxYuC9dsaYwVdpy2JLJBEkA==",
+  "dgSpecHash": "7cD4wYJottKpDMawlVCo3+4T3XmKLKmgZ230Tta4FrevEG5aly2xf4CwSf0OSp/KP554N488lzB55TaEd5VUuQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\RexoL\\source\\repos\\temp\\ConsoleApp1\\ConsoleApp1.csproj",
+  "projectFilePath": "C:\\Users\\RexoL\\source\\repos\\RSA-secureX\\securex.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
