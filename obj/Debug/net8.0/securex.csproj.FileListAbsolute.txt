@@ -1,0 +1,15 @@
+C:\Users\RexoL\source\repos\RSA-secureX\bin\Debug\net8.0\securex.exe
+C:\Users\RexoL\source\repos\RSA-secureX\bin\Debug\net8.0\securex.deps.json
+C:\Users\RexoL\source\repos\RSA-secureX\bin\Debug\net8.0\securex.runtimeconfig.json
+C:\Users\RexoL\source\repos\RSA-secureX\bin\Debug\net8.0\securex.dll
+C:\Users\RexoL\source\repos\RSA-secureX\bin\Debug\net8.0\securex.pdb
+C:\Users\RexoL\source\repos\RSA-secureX\obj\Debug\net8.0\securex.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\RexoL\source\repos\RSA-secureX\obj\Debug\net8.0\securex.AssemblyInfoInputs.cache
+C:\Users\RexoL\source\repos\RSA-secureX\obj\Debug\net8.0\securex.AssemblyInfo.cs
+C:\Users\RexoL\source\repos\RSA-secureX\obj\Debug\net8.0\securex.csproj.CoreCompileInputs.cache
+C:\Users\RexoL\source\repos\RSA-secureX\obj\Debug\net8.0\securex.sourcelink.json
+C:\Users\RexoL\source\repos\RSA-secureX\obj\Debug\net8.0\securex.dll
+C:\Users\RexoL\source\repos\RSA-secureX\obj\Debug\net8.0\refint\securex.dll
+C:\Users\RexoL\source\repos\RSA-secureX\obj\Debug\net8.0\securex.pdb
+C:\Users\RexoL\source\repos\RSA-secureX\obj\Debug\net8.0\securex.genruntimeconfig.cache
+C:\Users\RexoL\source\repos\RSA-secureX\obj\Debug\net8.0\ref\securex.dll
