@@ -10,6 +10,9 @@ namespace securex
         static void Main(string[] args)
         {
             int t1 = System.Environment.TickCount;
+
+            //Testing();
+
             Bigint n = "";
             Bigint key = "";
             Bigint message = "";
@@ -37,6 +40,19 @@ namespace securex
         {
             return (em^d)%n;
         }
+
+        public static void Testing() 
+        {
+            Bigint p = "100000000000000000000000";
+            Bigint q = "1";
+
+            Console.WriteLine(p);
+            Console.WriteLine(q);
+            Bigint a = p - q;
+            Console.WriteLine(a);
+            Console.WriteLine(a.ToString().Length);
+        }
+
     }
 }
 
