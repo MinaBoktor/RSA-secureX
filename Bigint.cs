@@ -15,6 +15,10 @@ namespace securex
         private string value;
         public Bigint(string bigint)
         {
+            while (bigint[0] == '0' && bigint.Length > 1)
+            {
+                bigint = bigint.Substring(1);
+            }
             value = bigint;
         }
 
@@ -162,8 +166,44 @@ namespace securex
         // The multiplication property
         public static Bigint operator *(Bigint first, Bigint second)
         {
-            // Delete the following line and Write your code
-            throw new NotImplementedException();
+            string x = first.value;
+            string y = second.value;
+
+            if (x == "0" || y == "0")
+            {
+                return "0";
+            }
+
+            // Base case for recursion
+            if (x.Length < 18 && y.Length < 18)
+                return new Bigint((long.Parse(x) * long.Parse(y)).ToString());
+
+            // Make lengths equal by padding with leading zeros
+            int n = Math.Max(x.Length, y.Length);
+            while (x.Length < n) x = "0" + x;
+            while (y.Length < n) y = "0" + y;
+
+            // Split numbers into halves
+            int m = n / 2;
+            string a = x.Substring(0, x.Length - m);
+            string b = x.Substring(x.Length - m);
+            string c = y.Substring(0, y.Length - m);
+            string d = y.Substring(y.Length - m);
+
+            // Recursive steps
+            Bigint ac = new Bigint(a) * new Bigint(c);
+            Bigint bd = new Bigint(b) * new Bigint(d);
+            Bigint ad = new Bigint(a) * new Bigint(d);
+            Bigint bc = new Bigint(b) * new Bigint(c);
+
+            // Adding the weight to each number according to its position
+            ac = ac.ToString() + new string('0', x.Length - a.Length + y.Length - c.Length);
+            ad = ad.ToString() + new string('0', x.Length - a.Length);
+            bc = bc.ToString() + new string('0', y.Length - c.Length);
+
+
+            return ac + bd + ad + bc;
+
         }
 
         // The division property

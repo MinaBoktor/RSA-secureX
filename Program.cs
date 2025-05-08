@@ -43,14 +43,21 @@ namespace securex
 
         public static void Testing() 
         {
-            Bigint p = "100000000000000000000000";
-            Bigint q = "1";
-
+            Bigint p = "1232145542523548967863514354897456132165456132153614564798432513256497898";
+            Bigint q = "3";
+            
             Console.WriteLine(p);
             Console.WriteLine(q);
-            Bigint a = p - q;
+            Bigint a = p * q;
             Console.WriteLine(a);
-            Console.WriteLine(a.ToString().Length);
+            Console.WriteLine($"Number of Digits: {a.ToString().Length}");
+
+            string answer = "3696436627570646903590543064692368396496368396460843694395297539769493694";
+            if (a.ToString() == answer)
+            {
+                Console.WriteLine("Sucess");
+            }
+
         }
 
     }
