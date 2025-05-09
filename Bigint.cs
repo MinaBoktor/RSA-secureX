@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.ConstrainedExecution;
 using System.Xml.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -13,23 +15,79 @@ namespace securex
     {
 
         private string value;
+        public bool positive;
         public Bigint(string bigint)
         {
-            while (bigint[0] == '0' && bigint.Length > 1)
+            if (bigint.Length == 0)
             {
-                bigint = bigint.Substring(1);
+                value = "0";
+                positive = true;
             }
-            value = bigint;
+            else
+            {
+                positive = bigint[0] == '-'? false : true;
+
+                Set_value(bigint);
+
+            }
+
         }
 
         public Bigint(int bigint)
         {
             value = bigint.ToString();
+            positive = true;
+        }
+
+        public void Set_value(string bigint)
+        {
+            for (int i = 0; i < bigint.Length; i++)
+            {
+                try
+                {
+                    if (!int.TryParse(bigint[i].ToString(), out int value))
+                    {
+                        bigint = bigint.Remove(i, 1);
+                        i--;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    continue;
+                }
+
+            }
+
+            while (bigint[0] == '0' && bigint.Length > 1)
+            {
+                bigint = bigint.Substring(1);
+            }
+
+
+            value = bigint;
         }
 
         // The addition property
         public static Bigint operator +(Bigint first, Bigint second)
         {
+            if (first.positive && !second.positive) 
+            { 
+                second.positive = true;
+                return first - second; 
+            }
+            if (!first.positive && second.positive)
+            {
+                first.positive = true;
+                return second - first; 
+            }
+            if (!first.positive && !second.positive) {
+                first.positive = true;
+                second.positive = true;
+                Bigint ans = first + second;
+                ans.positive = false;
+                return ans;
+            }
+
             int[] f = first.Split();
             int[] s = second.Split();
 
@@ -94,6 +152,36 @@ namespace securex
         // The subtraction property
         public static Bigint operator -(Bigint first, Bigint second)
         {
+            Bigint ans;
+            if (first.positive && second.positive && second > first)
+            {
+                ans = second - first;
+                ans.positive = false;
+                return ans;
+            }
+
+            if (!first.positive && second.positive) 
+            {
+                first.positive = true;
+                ans = first + second;
+                ans.positive = false;
+                return ans;
+            }
+
+            if (first.positive && !second.positive)
+            {
+                second.positive = true;
+                return first + second;
+            }
+
+            if (!first.positive && !second.positive)
+            {
+                first.positive = true;
+                second.positive = true;
+                return second - first;
+            }
+
+
             int[] f = first.Split();
             int[] s = second.Split();
 
@@ -105,38 +193,43 @@ namespace securex
 
             Stack<int> answer = new Stack<int>();
 
-            int diff = -1;
+            int diff = 0;
             int r = 0;
             int indexf, indexs;
+
+
 
             for (int i = 0; i < max; i++)
             {
                 indexf = tf - i - 1;
                 indexs = ts - i - 1;
 
+
                 if (indexf < 0)
                 {
                     if (indexs >= 0)
                     {
-                        (diff, r) = Sub(0, s[indexs] - r);
+                        (diff, r) = Sub(0, s[indexs], r);
                     }
                 }
                 else if (indexs < 0)
                 {
-                    (diff, r) = Sub(f[indexf], r);
+                    (diff, r) = Sub(f[indexf], 0, r);
                 }
                 else
                 {
-                    
-                    (diff, r) = Sub(f[indexf], s[indexs] - r);
+
+                    (diff, r) = Sub(f[indexf], s[indexs], r);
                 }
+
 
                 answer.Push(diff);
 
 
             }
 
-            if (answer.Peek() == 0)
+
+            while (answer.Count > 1 && answer.Peek() == 0)
             {
                 answer.Pop();
             }
@@ -145,13 +238,14 @@ namespace securex
             {
                 return "0";
             }
+
             return string.Join("", answer);
 
         }
 
-        public static (int, int) Sub(int f, int s)
+        public static (int, int) Sub(int f, int s, int r=0)
         {
-            int n = f - s;
+            int n = f - s - r;
 
             if (n >= 0)
             {
@@ -166,6 +260,26 @@ namespace securex
         // The multiplication property
         public static Bigint operator *(Bigint first, Bigint second)
         {
+            // Sign Determination
+            Bigint final = "";
+            if (first.positive && second.positive) { final.positive = true; }
+            else if (!first.positive && second.positive)
+            {
+                first.positive = true;
+                final.positive = false;
+            }
+            else if (first.positive && !second.positive)
+            {
+                second.positive = true;
+                final.positive = false;
+            }
+            else if (!first.positive && !second.positive)
+            {
+                first.positive = true;
+                second.positive = true;
+                final.positive = true;
+            }
+
             string x = first.value;
             string y = second.value;
 
@@ -174,12 +288,18 @@ namespace securex
                 return "0";
             }
 
+            int n = Math.Max(x.Length, y.Length);
+
             // Base case for recursion
-            if (x.Length < 18 && y.Length < 18)
-                return new Bigint((long.Parse(x) * long.Parse(y)).ToString());
+            if (n < 9)
+            {
+                final.Set_value((long.Parse(x) * long.Parse(y)).ToString());
+                return final;
+
+            }
+
 
             // Make lengths equal by padding with leading zeros
-            int n = Math.Max(x.Length, y.Length);
             while (x.Length < n) x = "0" + x;
             while (y.Length < n) y = "0" + y;
 
@@ -190,19 +310,28 @@ namespace securex
             string c = y.Substring(0, y.Length - m);
             string d = y.Substring(y.Length - m);
 
+            // Intializing Bigintergers
+            Bigint biga = a;
+            Bigint bigb = b;
+            Bigint bigc = c;
+            Bigint bigd = d;
+
             // Recursive steps
-            Bigint ac = new Bigint(a) * new Bigint(c);
-            Bigint bd = new Bigint(b) * new Bigint(d);
-            Bigint ad = new Bigint(a) * new Bigint(d);
-            Bigint bc = new Bigint(b) * new Bigint(c);
+            Bigint ac = biga * bigc;
+            Bigint bd = bigb * bigd;
+
+            // (a+b)*(c+d)
+            Bigint temp = (biga + bigb) * (bigc + bigd);  
+
+            // Combine: (a+b)*(c+d) - ac - bd
+            Bigint middle = temp - ac - bd;
 
             // Adding the weight to each number according to its position
-            ac = ac.ToString() + new string('0', x.Length - a.Length + y.Length - c.Length);
-            ad = ad.ToString() + new string('0', x.Length - a.Length);
-            bc = bc.ToString() + new string('0', y.Length - c.Length);
+            ac = ac.ToString() + new string('0', 2*m);
+            middle = middle.ToString() + new string('0', m);
 
-
-            return ac + bd + ad + bc;
+            final.value = (ac + middle + bd).ToString();
+            return final;
 
         }
 
@@ -235,7 +364,11 @@ namespace securex
         // To represent Bigint as String
         public override string ToString()
         {
-            return value;
+            if (!positive)
+                return $"-{value}";
+            else
+                return value;
+            
         }
 
         // To make Bigint accept the assignation of a string
@@ -248,6 +381,56 @@ namespace securex
         public static implicit operator Bigint(int number)
         {
             return new Bigint(number);
+        }
+
+        public static bool operator <(Bigint a, Bigint b)
+        {
+            return a.CompareTo(b) < 0;
+        }
+
+        public static bool operator >(Bigint a, Bigint b)
+        {
+            return a.CompareTo(b) > 0;
+        }
+
+        public bool Equals(Bigint other)
+        {
+            if (this.value == other.value)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public int CompareTo(Bigint other)
+        {
+            if (!this.positive &&  other.positive) { return -1; }
+            if (this.positive && !other.positive) { return 1; }
+            if (this.positive && other.positive)
+            {
+                if (this.value.Length > other.value.Length) { return 1; }
+                if (this.value.Length < other.value.Length) { return -1; }
+                for (int i = 0; i < this.value.Length; i++)
+                {
+                    if (this.value[i] > other.value[i]) { return 1; }
+                    if (this.value[i] < other.value[i]) { return -1; }
+                }
+                return 0;
+            }
+            else
+            {
+                if (this.value.Length < other.value.Length) { return 1; }
+                if (this.value.Length > other.value.Length) { return -1; }
+                for (int i = 0; i < this.value.Length; i++)
+                {
+                    if (this.value[i] > other.value[i]) { return -1; }
+                    if (this.value[i] < other.value[i]) { return 1; }
+                }
+                return 0;
+            }
         }
     }
 }
