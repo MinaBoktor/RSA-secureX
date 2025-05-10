@@ -58,7 +58,7 @@ namespace securex
 
             }
 
-            while (bigint[0] == '0' && bigint.Length > 1)
+            while (bigint.Length > 1 && bigint[0] == '0')
             {
                 bigint = bigint.Substring(1);
             }
@@ -70,6 +70,10 @@ namespace securex
         public string get_value()
         {
             return value;
+        }
+        public int Length()
+        {
+            return value.Length;
         }
 
         // The addition property
@@ -341,39 +345,95 @@ namespace securex
         }
 
         // The division property
-        public static Bigint operator /(Bigint first, Bigint second)
+        public static (Bigint quotient, Bigint remainder) Divide(Bigint a, Bigint b)
         {
-            // Delete the following line and Write your code
-            throw new NotImplementedException();
+
+            if (b.get_value() == "0") 
+                throw new DivideByZeroException();
+
+            // Base case: a < b
+            if (a < b)
+            {
+                return ("0", a);
+            }
+
+            (Bigint q, Bigint r) = Divide(a, b * 2);
+
+
+            Bigint doubleQ = q * 2;
+
+            // Compare remainder with b
+            if (r < b)
+            {
+                return (doubleQ, new Bigint(r.value));
+            }
+            else
+            {
+                return (doubleQ + new Bigint("1"), r - b);
+            }
+        }
+
+
+        // The Division property
+        public static Bigint operator /(Bigint a, Bigint b)
+        {
+            var (quotient, _) = Divide(a, b);
+            return quotient;
         }
 
         // The Modulus property
-        public static Bigint operator %(Bigint first, Bigint second)
+        public static Bigint operator %(Bigint a, Bigint b)
         {
-            // Delete the following line and Write your code
-            throw new NotImplementedException();
+            var (_, remainder) = Divide(a, b);
+            return remainder;
         }
+
+        
 
         // The Power property
         public static Bigint operator ^(Bigint first, Bigint second)
         {
-            Bigint result = "1";
+            
             if (!second.positive)
             {
                 return "0";
             }
-            
-            for (int i = 0; i < second; i++)
+
+            if (second.Equals("0"))
             {
-                result = result * first;
-             }
-            return result;
+                return "1";
+            }
+
+            Bigint half = second / 2;
+            half = first ^ half;
+            if (second.Is_even())
+            {
+                
+                return half*half;
+            }
+            else
+            {
+                return half * half * first;
+            }
+        }
+
+        public bool Is_even()
+        {
+            List<char> evenList = new List<char>() { '0', '2', '4', '6', '8' };
+
+            if (evenList.Contains(value[value.Length - 1]))
+            {
+                return true;
+            }
+            else
+                return false;
         }
 
         public int[] Split()
         {
             return value.ToCharArray().Select(c => int.Parse(c.ToString())).ToArray();
         }
+
 
         // To represent Bigint as String
         public override string ToString()
@@ -409,7 +469,7 @@ namespace securex
 
         public bool Equals(Bigint other)
         {
-            if (this.value == other.value)
+            if (this.value == other.value && this.positive == other.positive)
             {
                 return true;
             }

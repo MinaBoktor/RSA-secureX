@@ -9,21 +9,34 @@ namespace securex
 
         public static void simple()
         {
-            Bigint p = "1232145542523548967863514354897456132165456132153614564798432513256497898";
-            Bigint q = "331";
+            Bigint baseVal = "2003";
+            Bigint exp = "7";
+            Bigint mod = "3713";
 
-            Console.WriteLine(p);
-            Console.WriteLine(q);
-            Bigint a = p ^ q;
-            Console.WriteLine(a);
-            Console.WriteLine($"Number of Digits: {a.ToString().Length}");
+            Console.WriteLine(baseVal);
+            Console.WriteLine(exp);
+            Console.WriteLine(mod);
 
-            string answer = "3696436627570646903590543064692368396496368396460843694395297539769493694";
-            if (a.ToString() == answer)
+            Bigint result = "1";
+
+            baseVal = baseVal % mod;  // Reduce the base if it's larger than mod
+
+            while (exp > 0)
             {
-                Console.WriteLine("Sucess");
-                Console.WriteLine();
+                if (!exp.Is_even())  // If exponent is odd
+                {
+                    result = (result * baseVal) % mod;
+                }
+
+                baseVal = (baseVal ^ 2) % mod;  // Square the base
+                exp = exp / 2;  // Divide exponent by 2 (equivalent to exp >>= 1)
             }
+
+
+
+            Console.WriteLine(result);
+            Console.WriteLine($"Number of Digits: {result.ToString().Length}");
+
 
         }
 
@@ -363,6 +376,11 @@ namespace securex
             // Very large exponent
             Test("2", "50");       // 1125899906842624
             Test("1" + new string('0', 1000), "2");
+        }
+
+        public static void division()
+        {
+
         }
     }
 }
