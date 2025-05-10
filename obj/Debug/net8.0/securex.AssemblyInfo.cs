@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("securex")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b068f357e3876a7e4c50d3e36050ccebba128ef3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ab6a02a06f92d317ddb6f3efe577723a8b8369c")]
 [assembly: System.Reflection.AssemblyProductAttribute("securex")]
 [assembly: System.Reflection.AssemblyTitleAttribute("securex")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

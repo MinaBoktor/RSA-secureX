@@ -270,18 +270,18 @@ namespace securex
             if (first.positive && second.positive) { final.positive = true; }
             else if (!first.positive && second.positive)
             {
-                first.positive = true;
+                //first.positive = true;
                 final.positive = false;
             }
             else if (first.positive && !second.positive)
             {
-                second.positive = true;
+                //second.positive = true;
                 final.positive = false;
             }
             else if (!first.positive && !second.positive)
             {
-                first.positive = true;
-                second.positive = true;
+                //first.positive = true;
+                //second.positive = true;
                 final.positive = true;
             }
 
@@ -357,8 +357,17 @@ namespace securex
         // The Power property
         public static Bigint operator ^(Bigint first, Bigint second)
         {
-            // Delete the following line and Write your code
-            throw new NotImplementedException();
+            Bigint result = "1";
+            if (!second.positive)
+            {
+                return "0";
+            }
+            
+            for (int i = 0; i < second; i++)
+            {
+                result = result * first;
+             }
+            return result;
         }
 
         public int[] Split()

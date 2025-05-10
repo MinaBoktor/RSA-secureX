@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 namespace securex
 {
@@ -9,11 +10,11 @@ namespace securex
         public static void simple()
         {
             Bigint p = "1232145542523548967863514354897456132165456132153614564798432513256497898";
-            Bigint q = "3";
+            Bigint q = "331";
 
             Console.WriteLine(p);
             Console.WriteLine(q);
-            Bigint a = p * q;
+            Bigint a = p ^ q;
             Console.WriteLine(a);
             Console.WriteLine($"Number of Digits: {a.ToString().Length}");
 
@@ -21,6 +22,7 @@ namespace securex
             if (a.ToString() == answer)
             {
                 Console.WriteLine("Sucess");
+                Console.WriteLine();
             }
 
         }
@@ -322,5 +324,45 @@ namespace securex
             Console.WriteLine(Ascii.convert(test));
         }
     
+        public static void Power()
+        {
+            void Test(string baseStr, string exponentStr)
+            {
+                Bigint myBase = new Bigint(baseStr);
+                Bigint myExponent = new Bigint(exponentStr);
+                Bigint myResult = myBase ^ myExponent;
+
+                BigInteger sysBase = BigInteger.Parse(baseStr);
+                BigInteger sysExp = BigInteger.Parse(exponentStr);
+                BigInteger expected = BigInteger.Pow(sysBase, (int)sysExp); // assumes exponent fits in int
+
+                bool passed = myResult.ToString() == expected.ToString();
+
+                Console.WriteLine($"Test: {baseStr}^{exponentStr}");
+                Console.WriteLine($"Expected: {expected}");
+                Console.WriteLine($"Got     : {myResult}");
+                Console.WriteLine(passed ? "✅ PASS\n" : "❌ FAIL\n");
+            }
+
+            // Basic
+            Test("2", "0");        // 1
+            Test("2", "10");       // 1024
+            Test("5", "3");        // 125
+            Test("9", "2");        // 81
+
+            // Edge cases
+            Test("0", "0");        // often defined as 1
+            Test("0", "5");        // 0
+            Test("1", "1000000");  // 1
+
+            // Larger base/exponent
+            Test("12345", "5");    // 28613890600890625
+            Test("99", "10");      // big value
+            Test("99999999", "3"); // stress test
+
+            // Very large exponent
+            Test("2", "50");       // 1125899906842624
+            Test("1" + new string('0', 1000), "2");
+        }
     }
 }
