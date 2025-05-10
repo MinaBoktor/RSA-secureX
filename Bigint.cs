@@ -67,6 +67,11 @@ namespace securex
             value = bigint;
         }
 
+        public string get_value()
+        {
+            return value;
+        }
+
         // The addition property
         public static Bigint operator +(Bigint first, Bigint second)
         {
