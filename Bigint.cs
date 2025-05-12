@@ -348,6 +348,7 @@ namespace securex
         public static (Bigint quotient, Bigint remainder) Divide(Bigint a, Bigint b)
         {
 
+
             if (b.get_value() == "0") 
                 throw new DivideByZeroException();
 
@@ -357,10 +358,13 @@ namespace securex
                 return ("0", a);
             }
 
-            (Bigint q, Bigint r) = Divide(a, b * 2);
+            (Bigint q, Bigint r) = Divide(a, b + b);
 
 
-            Bigint doubleQ = q * 2;
+            Bigint doubleQ = q + q;
+
+            if (!a.positive && b.positive) { doubleQ.positive = false; }
+            else if (a.positive && !b.positive) { doubleQ.positive = false; }
 
             // Compare remainder with b
             if (r < b)

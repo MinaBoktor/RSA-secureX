@@ -1,9 +1,23 @@
+N: 3713
+Key: 7
+Message: 2003
+Operation: False
+The Encryption: 746
+Execution Time: 0 Milliseconds
+
+N: 3713
+Key: 2563
+Message: 746
+Operation: True
+The Decryption: 2003
+Execution Time: 0 Milliseconds
+
 N: 33
 Key: 7
 Message: 2
 Operation: False
 The Encryption: 29
-Execution Time: 16 Milliseconds
+Execution Time: 0 Milliseconds
 
 N: 33
 Key: 3
@@ -52,7 +66,7 @@ Key: 3378905
 Message: 2517819
 Operation: True
 The Decryption: 67898
-Execution Time: 16 Milliseconds
+Execution Time: 15 Milliseconds
 
 N: 300217
 Key: 17
@@ -66,5 +80,5 @@ Key: 281393
 Message: 4188
 Operation: True
 The Decryption: 33
-Execution Time: 46 Milliseconds
+Execution Time: 0 Milliseconds
 

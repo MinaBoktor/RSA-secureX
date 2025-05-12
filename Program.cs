@@ -11,6 +11,7 @@ namespace securex
     {
         static void Main(string[] args)
         {
+
             string line;
             Queue<string> lines = new Queue<string>();
             StreamReader sr = new StreamReader(@"C:\Users\RexoL\source\repos\RSA-secureX\SampleRSA.txt");

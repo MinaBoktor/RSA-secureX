@@ -9,32 +9,18 @@ namespace securex
 
         public static void simple()
         {
-            Bigint baseVal = "2003";
-            Bigint exp = "7";
-            Bigint mod = "3713";
-
-            Console.WriteLine(baseVal);
-            Console.WriteLine(exp);
-            Console.WriteLine(mod);
-
-            Bigint result = "1";
-
-            baseVal = baseVal % mod;  // Reduce the base if it's larger than mod
-
-            while (exp > 0)
-            {
-                if (!exp.Is_even())  // If exponent is odd
-                {
-                    result = (result * baseVal) % mod;
-                }
-
-                baseVal = (baseVal ^ 2) % mod;  // Square the base
-                exp = exp / 2;  // Divide exponent by 2 (equivalent to exp >>= 1)
-            }
+            Bigint p = "1000000000000000000000000000";
+            Bigint q = "20233";
 
 
+            
 
+            Bigint result = p ^ q;
+
+            Console.WriteLine(p);
+            Console.WriteLine(q);
             Console.WriteLine(result);
+
             Console.WriteLine($"Number of Digits: {result.ToString().Length}");
 
 
