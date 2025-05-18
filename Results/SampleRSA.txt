@@ -1,22 +1,9 @@
-N: 3713
-Key: 7
-Message: 2003
-Operation: False
-The Encryption: 746
-Execution Time: 0 Milliseconds
-
-N: 3713
-Key: 2563
-Message: 746
-Operation: True
-The Decryption: 2003
-Execution Time: 0 Milliseconds
-
 N: 33
 Key: 7
 Message: 2
 Operation: False
 The Encryption: 29
+Status: Passed
 Execution Time: 0 Milliseconds
 
 N: 33
@@ -24,6 +11,7 @@ Key: 3
 Message: 29
 Operation: True
 The Decryption: 2
+Status: Passed
 Execution Time: 0 Milliseconds
 
 N: 713
@@ -31,6 +19,7 @@ Key: 223
 Message: 439
 Operation: False
 The Encryption: 284
+Status: Passed
 Execution Time: 0 Milliseconds
 
 N: 713
@@ -38,6 +27,7 @@ Key: 367
 Message: 284
 Operation: True
 The Decryption: 439
+Status: Passed
 Execution Time: 0 Milliseconds
 
 N: 133
@@ -45,6 +35,7 @@ Key: 5
 Message: 6
 Operation: False
 The Encryption: 62
+Status: Passed
 Execution Time: 0 Milliseconds
 
 N: 133
@@ -52,6 +43,7 @@ Key: 65
 Message: 62
 Operation: True
 The Decryption: 6
+Status: Passed
 Execution Time: 0 Milliseconds
 
 N: 4108597
@@ -59,6 +51,7 @@ Key: 17
 Message: 67898
 Operation: False
 The Encryption: 2517819
+Status: Passed
 Execution Time: 0 Milliseconds
 
 N: 4108597
@@ -66,13 +59,15 @@ Key: 3378905
 Message: 2517819
 Operation: True
 The Decryption: 67898
-Execution Time: 15 Milliseconds
+Status: Passed
+Execution Time: 0 Milliseconds
 
 N: 300217
 Key: 17
 Message: 33
 Operation: False
 The Encryption: 4188
+Status: Passed
 Execution Time: 0 Milliseconds
 
 N: 300217
@@ -80,5 +75,6 @@ Key: 281393
 Message: 4188
 Operation: True
 The Decryption: 33
-Execution Time: 0 Milliseconds
+Status: Passed
+Execution Time: 15 Milliseconds
 

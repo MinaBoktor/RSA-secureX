@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 
 namespace securex
 {
@@ -7,366 +9,216 @@ namespace securex
     {
         public Test() {}
 
-        public static void simple()
+        public static List<string> Read(string path)
         {
-            Bigint p = "1000000000000000000000000000";
-            Bigint q = "20233";
+            string line;
+            List<string> lines = new List<string>();
+            StreamReader sr = new StreamReader(path);
+            line = sr.ReadLine();
+
+            while (line != null)
+            {
+                lines.Add(line);
+                line = sr.ReadLine();
+            }
+
+            sr.Close();
+
+            return lines;
+        }
+
+        public static (int, int) SecureX(string path, string output)
+        {
+            Bigint result;
+            List<string> lines = Read(path);
+            int total = int.Parse(lines[0]);
+            int passed = 0;
+
+            using (StreamWriter sw = File.CreateText(output))
+            {
+                
+
+                for (int i = 1; i < lines.Count; i+=4)
+                {
+                    int t1 = System.Environment.TickCount;
+
+                    Bigint n = lines[i];
+                    Bigint key = lines[i + 1];
+                    string message = lines[i + 2];
+                    bool operation = (lines[i + 3] == "0") ? false : true;
+
+                    sw.WriteLine($"N: {n}");
+                    sw.WriteLine($"Key: {key}");
+                    sw.WriteLine($"Message: {message}");
+                    sw.WriteLine($"Operation: {operation}");
+
+                    if (!operation)
+                    {
+                        result = RSA.Encrypt(message, key, n);
+                        sw.WriteLine($"The Encryption: {result}");
+
+                        if (result.ToString() == lines[i + 6])
+                        {
+                            sw.WriteLine($"Status: Passed");
+                            passed++;
+                        }
+                        else
+                        {
+                            sw.WriteLine($"Status: Failed");
+                        }
+                    }
+
+                    else
+                    {
+                        result = RSA.Decrypt(message, key, n).ToString();
+
+                        sw.WriteLine($"The Decryption: {result}");
+
+                        if (result.ToString() == lines[i - 2]) 
+                        {
+                            sw.WriteLine($"Status: Passed");
+                            passed++; 
+                        }
+                        else
+                        {
+                            sw.WriteLine($"Status: Failed");
+                        }
+                    }
+                    int t2 = System.Environment.TickCount;
+                    sw.WriteLine($"Execution Time: {t2 - t1} Milliseconds\n");
+                }
+            }
+
+            return (passed, total);
+        }
+
+        public static (int, int) String(string path, string output)
+        {
+            string final;
+            List<string> lines = Read(path);
+            int total = int.Parse(lines[0]);
+            int passed = 0;
+
+            using (StreamWriter sw = File.CreateText(output))
+            {
+                for (int i = 1; i < lines.Count; i += 4)
+                {
+                    int t1 = System.Environment.TickCount;
+
+                    Bigint n = lines[i];
+                    Bigint key = lines[i + 1];
+                    string message = lines[i + 2];
+                    bool operation = (lines[i + 3] == "0") ? false : true;
+
+                    sw.WriteLine($"N: {n}");
+                    sw.WriteLine($"Key: {key}");
+                    sw.WriteLine($"Message: {message}");
+                    sw.WriteLine($"Operation: {operation}");
+
+                    if (!operation)
+                    {
+                        final = RSA.Encrypt(message, key, n).ToString();
+                        sw.WriteLine($"The Encryption: {final}");
+
+                        if (final == lines[i + 6])
+                        {
+                            sw.WriteLine($"Status: Passed");
+                            passed++;
+                        }
+                        else
+                        {
+                            sw.WriteLine($"Status: Failed");
+                        }
+                    }
+                    else
+                    {
+                        final = Ascii.convert(RSA.Decrypt(message, key, n));
+
+                        sw.WriteLine($"The Decryption: {final}");
+
+                        if (final == lines[i - 2])
+                        {
+                            sw.WriteLine($"Status: Passed");
+                            passed++;
+                        }
+                        else
+                        {
+                            sw.WriteLine($"Status: Failed");
+                        }
+                    }
+                    int t2 = System.Environment.TickCount;
+                    sw.WriteLine($"Execution Time: {t2 - t1} Milliseconds\n");
+                }
+            }
+
+            return (passed, total);
+        }
 
 
+
+        public static (int, int) Operations(string path, string answers_path , string output, char operation)
+        {
             
+            Queue<string> lines = new Queue<string>(Read(path));
+            Queue<string> answers = new Queue<string>(Read(answers_path));
 
-            Bigint result = p ^ q;
-
-            Console.WriteLine(p);
-            Console.WriteLine(q);
-            Console.WriteLine(result);
-
-            Console.WriteLine($"Number of Digits: {result.ToString().Length}");
-
-
-        }
-
-        public static void Add()
-        {
-            (string a, string b, string expected)[] tests = new (string, string, string)[]
-{
-            ("0", "0", "0"),
-            ("0", "1", "1"),
-            ("1", "0", "1"),
-            ("1", "1", "2"),
-            ("9", "1", "10"),
-            ("99", "1", "100"),
-            ("123", "456", "579"),
-            ("999", "999", "1998"),
-            ("1000", "1000", "2000"),
-            ("123456789", "987654321", "1111111110"),
-            ("12345678901234567890", "0", "12345678901234567890"),
-            ("0", "12345678901234567890", "12345678901234567890"),
-            ("99999999999999999999", "1", "100000000000000000000"),
-            ("500", "500", "1000"),
-            ("1", "999999999999999999999999", "1000000000000000000000000"),
-            ("123", "877", "1000"),
-            ("999999999", "999999999", "1999999998"),
-            ("18446744073709551615", "1", "18446744073709551616"),
-            ("111111111111111111", "888888888888888889", "1000000000000000000"),
-            ("1000000000000000000", "1000000000000000000", "2000000000000000000"),
-            ("12345678901234567890", "98765432109876543210", "111111111011111111100"),
-            ("999", "1", "1000"),
-            ("1", "999", "1000"),
-            ("9999", "1", "10000"),
-            ("99999", "1", "100000"),
-            ("999999", "1", "1000000"),
-            ("9999999", "1", "10000000"),
-            ("99999999", "1", "100000000"),
-            ("999999999", "1", "1000000000"),
-            ("9999999999", "1", "10000000000"),
-            ("10000000000000000000", "1", "10000000000000000001"),
-            ("1", "10000000000000000000", "10000000000000000001"),
-            ("88888888", "11111112", "100000000"),
-            ("11111111", "22222222", "33333333"),
-            ("1234", "4321", "5555"),
-            ("999999", "999999", "1999998"),
-            ("0", "999999999999", "999999999999"),
-            ("999999999999", "0", "999999999999"),
-            ("100000000000", "100000000000", "200000000000"),
-            ("111", "889", "1000"),
-            ("13579", "86421", "100000"),
-            ("7", "5", "12"),
-            ("18", "2", "20"),
-            ("91", "9", "100"),
-            ("999", "0", "999"),
-            ("0", "999", "999"),
-            ("1", "1", "2"),
-            ("2", "2", "4"),
-            ("3", "3", "6"),
-            ("123456789123456789123456789", "987654321987654321987654321", "1111111111111111111111111110"),
-            ("555555555555555555", "444444444444444445", "1000000000000000000"),
-            ("111111111111111111", "888888888888888889", "1000000000000000000"),
-            ("10", "90", "100"),
-            ("25", "75", "100"),
-            ("60", "40", "100"),
-            ("1", "999999", "1000000"),
-            ("999999", "1", "1000000"),
-            ("12345678901234567890", "12345678901234567890", "24691357802469135780"),
-            ("50000000000000000000", "50000000000000000000", "100000000000000000000"),
-            ("33333333333333333333", "66666666666666666667", "100000000000000000000"),
-            ("999", "111", "1110"),
-            ("111", "999", "1110"),
-            ("9876543210", "1234567890", "11111111100"),
-            ("1234567890123456", "6543210987654321", "7777778877777777"),
-            ("1001", "999", "2000"),
-            ("1111", "8889", "10000"),
-            ("234", "766", "1000"),
-            ("111", "222", "333"),
-            ("987", "13", "1000"),
-            ("100", "900", "1000"),
-            ("250", "750", "1000"),
-            ("10", "90", "100"),
-            ("1", "999999999", "1000000000"),
-            ("999999999", "1", "1000000000"),
-            ("0", "1000000000000000000", "1000000000000000000"),
-            ("1000000000000000000", "0", "1000000000000000000"),
-            ("555", "445", "1000"),
-            ("112233", "887767", "1000000"),
-            ("500500500", "499499500", "1000000000"),
-            ("111222333", "888777667", "1000000000"),
-            ("987654321", "12345679", "1000000000"),
-            ("999999000", "1000", "1000000000"),
-            ("98765432109876543210", "12", "98765432109876543222"),
-            ("12", "98765432109876543210", "98765432109876543222"),
-            ("98765432109876543210", "98765432109876543210", "197530864219753086420"),
-            ("3141592653589793", "2718281828459045", "5859874482048838"),
-            ("1", "99999999999999999999", "100000000000000000000"),
-            ("99999999999999999999", "1", "100000000000000000000"),
-            ("50000000000000000001", "49999999999999999999", "100000000000000000000"),
-};
-
+            int total = int.Parse(lines.Dequeue());
             int passed = 0;
-            for (int i = 0; i < tests.Length; i++)
+            Bigint result;
+
+            using (StreamWriter sw = File.CreateText(output))
             {
-                Bigint A = new Bigint(tests[i].a);
-                Bigint B = new Bigint(tests[i].b);
-                Bigint result = A + B;
-
-                if (result.ToString() == tests[i].expected)
+                while (lines.Count > 2)
                 {
-                    Console.WriteLine($"Test {i + 1:D3} Passed ✔");
-                    passed++;
-                }
-                else
-                {
-                    Console.WriteLine($"Test {i + 1:D3} FAILED ❌: {tests[i].a} + {tests[i].b} = {result} (Expected: {tests[i].expected})");
-                }
-            }
+                    int t1 = System.Environment.TickCount;
 
-            Console.WriteLine($"\n✅ {passed} / {tests.Length} test cases passed.");
-        }
+                    lines.Dequeue();
+                    Bigint first = lines.Dequeue();
+                    Bigint second = lines.Dequeue();
+                    sw.WriteLine($"First Number: {first}");
+                    sw.WriteLine($"Second Number: {second}");
 
-        public static void Sub()
-        {
-            (string a, string b, string expected)[] tests = new (string, string, string)[]
-{
-            ("0", "0", "0"),
-            ("1", "0", "1"),
-            ("1", "1", "0"),
-            ("10", "1", "9"),
-            ("100", "1", "99"),
-            ("1000", "1", "999"),
-            ("10000", "1", "9999"),
-            ("123", "23", "100"),
-            ("100", "99", "1"),
-            ("999", "999", "0"),
-            ("1000", "999", "1"),
-            ("500", "499", "1"),
-            ("10000", "9999", "1"),
-            ("111", "11", "100"),
-            ("1000", "0", "1000"),
-            ("0", "0", "0"),
-            ("123456789", "123456788", "1"),
-            ("987654321", "987654321", "0"),
-            ("987654322", "987654321", "1"),
-            ("1000000000", "1", "999999999"),
-            ("10000000000", "1000000000", "9000000000"),
-            ("12345678901234567890", "12345678901234567889", "1"),
-            ("999999999999999999", "1", "999999999999999998"),
-            ("50000000000000000000", "49999999999999999999", "1"),
-            ("123456", "65432", "58024"),
-            ("100000000", "99999999", "1"),
-            ("24691357802469135780", "12345678901234567890", "12345678901234567890"),
-            ("100000000000000000000", "99999999999999999999", "1"),
-            ("1000000000", "0", "1000000000"),
-            ("1", "0", "1"),
-            ("100", "0", "100"),
-            ("1000", "10", "990"),
-            ("1000", "999", "1"),
-            ("1010", "10", "1000"),
-            ("1200", "200", "1000"),
-            ("1100", "100", "1000"),
-            ("10000", "1", "9999"),
-            ("10001", "1", "10000"),
-            ("1000", "1", "999"),
-            ("12345", "5432", "6913"),
-            ("98765", "12345", "86420"),
-            ("10000000000000000001", "1", "10000000000000000000"),
-            ("88888888", "88888887", "1"),
-            ("100000000000", "99999999999", "1"),
-            ("77777777", "77777777", "0"),
-            ("100000", "99999", "1"),
-            ("123", "23", "100"),
-            ("500", "400", "100"),
-            ("400", "300", "100"),
-            ("999", "111", "888"),
-            ("1000000", "1", "999999"),
-            ("2000000", "1", "1999999"),
-            ("100", "1", "99"),
-            ("999999", "999998", "1"),
-            ("1000000000", "999999999", "1"),
-            ("22222222", "11111111", "11111111"),
-            ("1234567890", "123456789", "1111111101"),
-            ("555555555", "444444444", "111111111"),
-            ("1234567890123456", "654321098765432", "580246791358024"),
-            ("7777778877777777", "6543210987654321", "1234567890123456"),
-            ("10000", "10000", "0"),
-            ("20000", "10000", "10000"),
-            ("30000", "10000", "20000"),
-            ("40000", "10000", "30000"),
-            ("50000", "10000", "40000"),
-            ("999999", "999999", "0"),
-            ("1000000", "999999", "1"),
-            ("10", "1", "9"),
-            ("100", "1", "99"),
-            ("1000", "1", "999"),
-            ("10000", "1", "9999"),
-            ("100000", "1", "99999"),
-            ("1000000", "1", "999999"),
-            ("10000000", "1", "9999999"),
-            ("100000000", "1", "99999999"),
-            ("1000000000", "1", "999999999"),
-            ("10000000000", "1", "9999999999"),
-            ("100000000000", "1", "99999999999"),
-            ("500", "250", "250"),
-            ("1000", "250", "750"),
-            ("999999999999", "999999999998", "1"),
-            ("999999999998", "999999999998", "0"),
-            ("18446744073709551616", "1", "18446744073709551615"),
-            ("100000000000000000000", "99999999999999999999", "1"),
-            ("24691357802469135780", "12345678901234567890", "12345678901234567890"),
-            ("12345678901234567890", "0", "12345678901234567890"),
-            ("12345678901234567890", "12345678901234567890", "0"),
-            ("1000000000000000000000", "1", "999999999999999999999"),
-            ("999999999999999999999", "999999999999999999998", "1"),
-            ("100", "10", "90"),
-            ("1000", "100", "900"),
-            ("999", "9", "990"),
-            ("200", "100", "100"),
-            ("9876543210", "1234567890", "8641975320"),
-            ("98765432109876543222", "98765432109876543221", "1"),
-            ("5859874482048838", "2718281828459045", "3141592653589793"),
-};
+                    if (operation == '+')
+                    {
+                        result = first + second;
+                    }
+                    else if (operation == '-')
+                    {
+                        result = first - second;
+                    }
+                    else if (operation == '*')
+                    {
+                        result = first * second;
+                    }
+                    else
+                    {
+                        return (-1, -1);
+                    }
 
-            int passed = 0;
-            for (int i = 0; i < tests.Length; i++)
-            {
-                Bigint A = new Bigint(tests[i].a);
-                Bigint B = new Bigint(tests[i].b);
-                Bigint result = A - B;
+                    sw.WriteLine($"Result: {result}");
 
-                if (result.ToString() == tests[i].expected)
-                {
-                    Console.WriteLine($"Test {i + 1:D3} Passed ✔");
-                    passed++;
-                }
-                else
-                {
-                    Console.WriteLine($"Test {i + 1:D3} FAILED ❌: {tests[i].a} - {tests[i].b} = {result} (Expected: {tests[i].expected})");
+                    if (result.ToString() == answers.Dequeue())
+                    {
+                        passed++;
+                        sw.WriteLine($"Status: Passed");
+                    }
+                    else
+                    {
+                        sw.WriteLine($"Status: Failed");
+                    }
+
+                    if (answers.Count > 0)
+                    {
+                        answers.Dequeue();
+                    }
+                    
+
+                    int t2 = System.Environment.TickCount;
+                    sw.WriteLine($"Execution Time: {t2 - t1} Milliseconds\n");
                 }
             }
 
-            Console.WriteLine($"\n✅ {passed} / {tests.Length} test cases passed.");
-        }
-
-        public static void Negative()
-        {
-            void Test(string label, Bigint a, Bigint b, string op, string expected)
-            {
-                Bigint result = op == "+" ? a + b : a - b;
-                string actual = result.ToString();
-                Console.WriteLine($"{label}: {actual} (Expected: {expected}) -> {(actual == expected ? "PASS" : "FAIL")}");
-            }
-
-            // Basic cases
-            Test("+123 + +456", new Bigint("123"), new Bigint("456"), "+", "579");
-            Test("+123 + -456", new Bigint("123"), new Bigint("-456"), "+", "-333");
-            Test("-123 + +456", new Bigint("-123"), new Bigint("456"), "+", "333");
-            Test("-123 + -456", new Bigint("-123"), new Bigint("-456"), "+", "-579");
-
-            // Subtraction
-            Test("+456 - +123", new Bigint("456"), new Bigint("123"), "-", "333");
-            Test("+123 - +456", new Bigint("123"), new Bigint("456"), "-", "-333");
-            Test("+123 - -456", new Bigint("123"), new Bigint("-456"), "-", "579");
-            Test("-123 - +456", new Bigint("-123"), new Bigint("456"), "-", "-579");
-            Test("-123 - -456", new Bigint("-123"), new Bigint("-456"), "-", "333");
-            Test("-456 - -123", new Bigint("-456"), new Bigint("-123"), "-", "-333");
-
-            // Zero and signs
-            Test("0 + 0", new Bigint("0"), new Bigint("0"), "+", "0");
-            Test("0 - 0", new Bigint("0"), new Bigint("0"), "-", "0");
-            Test("-0 + 0", new Bigint("-0"), new Bigint("0"), "+", "0");
-            Test("0 + -0", new Bigint("0"), new Bigint("-0"), "+", "0");
-
-            // Cancel out
-            Test("999 + -999", new Bigint("999"), new Bigint("-999"), "+", "0");
-            Test("-999 + 999", new Bigint("-999"), new Bigint("999"), "+", "0");
-
-            // Large numbers
-            Test("1000000000000000 + 1", new Bigint("1000000000000000"), new Bigint("1"), "+", "1000000000000001");
-            Test("1000000000000000 - 1", new Bigint("1000000000000000"), new Bigint("1"), "-", "999999999999999");
-
-            // Leading zeros
-            Test("000123 + 000456", new Bigint("000123"), new Bigint("000456"), "+", "579");
-            Test("000 - 000", new Bigint("000"), new Bigint("000"), "-", "0");
-
-            // Borrowing across digits
-            Test("1000 - 1", new Bigint("1000"), new Bigint("1"), "-", "999");
-            Test("10000 - 1", new Bigint("10000"), new Bigint("1"), "-", "9999");
-            Test("100000 - 99999", new Bigint("100000"), new Bigint("99999"), "-", "1");
-
-            // Negative result with borrowing
-            Test("1 - 1000", new Bigint("1"), new Bigint("1000"), "-", "-999");
-        }
-
-        public static void Ascii_t()
-        {
-            Bigint test = Ascii.convert("Hello to my world \n it's my first words");
-
-            Console.WriteLine(test);
-            Console.WriteLine(Ascii.convert(test));
-        }
-    
-        public static void Power()
-        {
-            void Test(string baseStr, string exponentStr)
-            {
-                Bigint myBase = new Bigint(baseStr);
-                Bigint myExponent = new Bigint(exponentStr);
-                Bigint myResult = myBase ^ myExponent;
-
-                BigInteger sysBase = BigInteger.Parse(baseStr);
-                BigInteger sysExp = BigInteger.Parse(exponentStr);
-                BigInteger expected = BigInteger.Pow(sysBase, (int)sysExp); // assumes exponent fits in int
-
-                bool passed = myResult.ToString() == expected.ToString();
-
-                Console.WriteLine($"Test: {baseStr}^{exponentStr}");
-                Console.WriteLine($"Expected: {expected}");
-                Console.WriteLine($"Got     : {myResult}");
-                Console.WriteLine(passed ? "✅ PASS\n" : "❌ FAIL\n");
-            }
-
-            // Basic
-            Test("2", "0");        // 1
-            Test("2", "10");       // 1024
-            Test("5", "3");        // 125
-            Test("9", "2");        // 81
-
-            // Edge cases
-            Test("0", "0");        // often defined as 1
-            Test("0", "5");        // 0
-            Test("1", "1000000");  // 1
-
-            // Larger base/exponent
-            Test("12345", "5");    // 28613890600890625
-            Test("99", "10");      // big value
-            Test("99999999", "3"); // stress test
-
-            // Very large exponent
-            Test("2", "50");       // 1125899906842624
-            Test("1" + new string('0', 1000), "2");
-        }
-
-        public static void division()
-        {
-
+            return (passed, total);
         }
     }
 }

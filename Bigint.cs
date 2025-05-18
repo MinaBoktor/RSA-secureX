@@ -16,6 +16,7 @@ namespace securex
 
         private string value;
         public bool positive;
+        public bool encrypted;
         public Bigint(string bigint)
         {
             if (bigint.Length == 0)
@@ -25,6 +26,7 @@ namespace securex
             }
             else
             {
+
                 positive = bigint[0] == '-'? false : true;
 
                 Set_value(bigint);
@@ -41,14 +43,19 @@ namespace securex
 
         public void Set_value(string bigint)
         {
+            encrypted = false;
             for (int i = 0; i < bigint.Length; i++)
             {
                 try
                 {
                     if (!int.TryParse(bigint[i].ToString(), out int value))
                     {
-                        bigint = bigint.Remove(i, 1);
-                        i--;
+                        if (bigint[i] == '-' && i == 0)
+                        {
+                            continue;
+                        }
+                        encrypted = true;
+                        break;
                     }
                 }
                 catch (Exception ex)
@@ -58,13 +65,24 @@ namespace securex
 
             }
 
-            while (bigint.Length > 1 && bigint[0] == '0')
+            while (bigint.Length > 1 && bigint[0] == '0' && !encrypted)
             {
                 bigint = bigint.Substring(1);
             }
 
+            if (!encrypted && bigint[0] == '-')
+            {
+                bigint = bigint = bigint.Remove(0, 1);
+            }
 
-            value = bigint;
+            if (encrypted && bigint[0] == '$')
+            {
+                bigint = bigint.Remove(0, 1);
+                value = bigint;
+                return;
+            }
+
+            value = encrypted? Ascii.convert(bigint) :bigint;
         }
 
         public string get_value()

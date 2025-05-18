@@ -1,0 +1,16 @@
+N: 4108597
+Key: 17
+Message: GG
+Operation: False
+The Encryption: 815650
+Status: Passed
+Execution Time: 0 Milliseconds
+
+N: 4108597
+Key: 3378905
+Message: 815650
+Operation: True
+The Decryption: GG
+Status: Passed
+Execution Time: 0 Milliseconds
+
