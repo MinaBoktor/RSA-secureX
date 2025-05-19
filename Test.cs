@@ -220,5 +220,6 @@ namespace securex
 
             return (passed, total);
         }
+
     }
 }

@@ -489,6 +489,25 @@ namespace securex
             return a.CompareTo(b) > 0;
         }
 
+        public static bool operator >=(Bigint a, Bigint b)
+        {
+            return (a.CompareTo(b) >= 0);
+        }
+
+        public static bool operator <=(Bigint a, Bigint b)
+        {
+            return (a.CompareTo(b) <= 0);
+        }
+
+        public static Bigint Power(Bigint num, Bigint exp)
+        {
+            return num ^ exp;
+        }
+
+        public static Bigint ToBigint(string num)
+        {
+            return new Bigint(num);
+        }
         public bool Equals(Bigint other)
         {
             if (this.value == other.value && this.positive == other.positive)
@@ -500,6 +519,7 @@ namespace securex
                 return false;
             }
         }
+
 
         public int CompareTo(Bigint other)
         {
