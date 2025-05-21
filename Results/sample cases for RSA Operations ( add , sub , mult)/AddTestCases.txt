@@ -2,7 +2,7 @@ First Number: 12
 Second Number: 12
 Result: 24
 Status: Passed
-Execution Time: 15 Milliseconds
+Execution Time: 16 Milliseconds
 
 First Number: 1537983
 Second Number: 23606766456

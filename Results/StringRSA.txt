@@ -12,7 +12,7 @@ Message: 815650
 Operation: True
 The Decryption: GG
 Status: Passed
-Execution Time: 0 Milliseconds
+Execution Time: 16 Milliseconds
 
 N: 129871196177015365115851828640488565623
 Key: 5
@@ -20,7 +20,7 @@ Message: Noo
 Operation: False
 The Encryption: 50630621607233968150497099210509892845
 Status: Passed
-Execution Time: 16 Milliseconds
+Execution Time: 0 Milliseconds
 
 N: 129871196177015365115851828640488565623
 Key: 77922717706209219055835765511836566613
@@ -28,5 +28,5 @@ Message: 50630621607233968150497099210509892845
 Operation: True
 The Decryption: Noo
 Status: Passed
-Execution Time: 312 Milliseconds
+Execution Time: 328 Milliseconds
 
