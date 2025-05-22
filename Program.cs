@@ -14,13 +14,14 @@ namespace securex
             int c = 0;
             Console.WriteLine("1. Encrypt");
             Console.WriteLine("2. Decrypt");
-            Console.WriteLine("3. String Decrypt");
-            Console.WriteLine("4. Generate Key");
-            Console.WriteLine("5. Run Test Cases");
+            Console.WriteLine("3. String Encrypt");
+            Console.WriteLine("4. String Decrypt");
+            Console.WriteLine("5. Generate Key");
+            Console.WriteLine("6. Run Test Cases");
             Console.Write("Your Choice: ");
             c = int.Parse((Console.ReadLine()).Trim());
 
-            Bigint n, key, m;
+            string n, key, m;
 
             switch (c)
             {
@@ -35,15 +36,20 @@ namespace securex
 
                 case 3:
                     (n, key, m) = get_data();
-                    Console.WriteLine($"Decryption: {Ascii.convert(RSA.Decrypt(m, key, n))}");
+                    Console.WriteLine($"Encryption: {RSA.String_Encrypt(m, key, n)}");
                     break;
+
                 case 4:
+                    (n, key, m) = get_data();
+                    Console.WriteLine($"Decryption: {RSA.String_Decrypt(m, key, n)}");
+                    break;
+                case 5:
                     int t;
                     Console.Write("Number of digits: ");
                     t = int.Parse((Console.ReadLine()).Trim());
                     RSA.Generate_Public(t);
                     break;
-                case 5:
+                case 6:
                     // Testing Bigint Operations
 
                     string path = @"C:\Users\RexoL\source\repos\RSA-secureX";
@@ -85,9 +91,9 @@ namespace securex
 
 
         }
-        public static (Bigint, Bigint, Bigint) get_data()
+        public static (string, string, string) get_data()
         {
-            Bigint n, key, m;
+            string n, key, m;
 
             Console.Write("N: ");
             n = (Console.ReadLine()).Trim();

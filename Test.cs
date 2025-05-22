@@ -105,8 +105,8 @@ namespace securex
                 {
                     int t1 = System.Environment.TickCount;
 
-                    Bigint n = lines[i];
-                    Bigint key = lines[i + 1];
+                    string n = lines[i];
+                    string key = lines[i + 1];
                     string message = lines[i + 2];
                     bool operation = (lines[i + 3] == "0") ? false : true;
 
@@ -117,7 +117,7 @@ namespace securex
 
                     if (!operation)
                     {
-                        final = RSA.Encrypt(message, key, n).ToString();
+                        final = RSA.String_Encrypt(message, key, n);
                         sw.WriteLine($"The Encryption: {final}");
 
                         if (final == lines[i + 6])
@@ -132,7 +132,7 @@ namespace securex
                     }
                     else
                     {
-                        final = Ascii.convert(RSA.Decrypt(message, key, n));
+                        final = RSA.String_Decrypt(message, key, n);
 
                         sw.WriteLine($"The Decryption: {final}");
 

@@ -6,20 +6,47 @@ namespace securex
 {
     public class RSA
     {
-        public static Bigint Encrypt(Bigint m, Bigint e, Bigint n)
+        public static string Encrypt(Bigint m, Bigint e, Bigint n)
         {
             // Using Modular Exponential
             Bigint result = Modular_exponential(m, e, n);
 
-            return result;
+            return result.get_value();
         }
 
-        public static Bigint Decrypt(Bigint em, Bigint d, Bigint n)
+        public static string String_Encrypt(string m, string e, string n)
+        {
+            string temp = "";
+            string temp2 = "0";
+            for (int i = 0; i < m.Length; i++)
+            {
+                temp2 = Encrypt(m[i].ToString(), e, n);
+                
+                while (temp2.Length != 10) { temp2 = "0" + temp2; }
+                temp = temp + temp2;
+            }
+
+            return temp;
+        }
+
+        public static string String_Decrypt(string m, string d, string n)
+        {
+            string temp = "";
+            string temp2 = "0";
+            for (int i = 0; i < m.Length; i += 10)
+            {
+                temp2 = Decrypt(m.Substring(i, 10), d, n);
+                temp += Ascii.Deconvert(temp2);
+            }
+            return temp;
+        }
+
+        public static string Decrypt(Bigint em, Bigint d, Bigint n)
         {
             // Using Modular Exponential
             Bigint result = Modular_exponential(em, d, n);
 
-            return result;
+            return result.get_value();
         }
 
         public static Bigint Modular_exponential(Bigint bV, Bigint exp, Bigint mod)

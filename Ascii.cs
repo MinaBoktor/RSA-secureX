@@ -24,17 +24,17 @@ namespace securex
             return result;
         }
 
-        public static string convert(Bigint number)
+        public static string Deconvert(string number)
         {
             string result = "";
             char temp;
-            string value = number.get_value();
-            
-            while (value.Length%3 != 0) { value = 0 + value; }
 
-            for (int i = 0; i < value.Length; i+=3)
+            
+            while (number.Length%10 != 0) { number = 0 + number; }
+
+            for (int i = 0; i < number.Length; i+=10)
             {
-                temp = (char) Int32.Parse($"{value[i]}{value[i + 1]}{value[i + 2]}");
+                temp = (char) Int32.Parse(number.Substring(i, 10));
                 result += temp;
             }
             return result;
